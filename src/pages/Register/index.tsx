@@ -2,12 +2,18 @@ import React from 'react';
 import { Formik, Field, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
 
+import {
+  formatValue,
+  formatText,
+  formatPriceField,
+} from '../../utils/formatValue';
+
 import income from '../../assets/income.svg';
 import outcome from '../../assets/outcome.svg';
 
 import Header from '../../components/Header';
 
-import { FormContainer, Form, RadioButtonGroup } from './styles';
+import { FormContainer, Form, RadioButtonGroup, Error } from './styles';
 
 interface MyFormValues {
   name: string;
@@ -23,19 +29,30 @@ const initialValues: MyFormValues = {
   category: '',
 };
 
+const maxValue = 999999999;
+
 const registerTransactionSchema = Yup.object().shape({
-  name: Yup.string().required('Required'),
-  price: Yup.number().required('Required'),
-  type: Yup.string().required('Required'),
-  category: Yup.string().required('Required'),
+  name: Yup.string()
+    .required('Obrigatório')
+    .min(5, 'Digite no mínimo 5 caracteres')
+    .max(40, 'Permitido no máximo 40 caracteres'),
+  price: Yup.number()
+    .positive('Valor dever ser positivo')
+    .typeError('Campo dever ser neste formato: 1499.99')
+    .max(maxValue, `Valor deve igual ou menor que ${maxValue}`),
+  type: Yup.string().required('Obrigatório'),
+  category: Yup.string()
+    .required('Obrigatório')
+    .min(5, 'Digite no mínimo 5 caracteres')
+    .max(30, 'Permitido no máximo 15 caracteres'),
 });
 
 const Register: React.FC = () => {
   function getStylesError(
     errors: string | undefined,
-    fieldName: string,
+    isTouched: boolean | undefined,
   ): { border: string } | undefined {
-    if (errors && fieldName) {
+    if (errors && isTouched) {
       return {
         border: '1px solid red',
       };
@@ -49,7 +66,7 @@ const Register: React.FC = () => {
   ): void => {
     actions.setSubmitting(true);
     // make async call
-    console.log(values);
+    console.log(values, formatValue(values.price));
 
     actions.setSubmitting(false);
   };
@@ -63,24 +80,40 @@ const Register: React.FC = () => {
           validationSchema={registerTransactionSchema}
           onSubmit={sendForm}
         >
-          {({ values, isSubmitting, errors, handleChange, handleSubmit }) => (
+          {({
+            values,
+            isSubmitting,
+            errors,
+            touched,
+            handleChange,
+            handleBlur,
+            handleSubmit,
+          }) => (
             <Form onSubmit={handleSubmit}>
               <h3>Cadastro</h3>
               <Field
-                style={getStylesError(errors.name, 'name')}
+                style={getStylesError(errors.name, touched.name)}
                 placeholder="Nome"
                 name="name"
-                value={values.name}
+                value={formatText(values.name)}
                 onChange={handleChange}
+                required
+                maxLength="40"
               />
-              <span>{errors.name}</span>
+              {touched.name && errors.name && <Error>{errors.name}</Error>}
+
               <Field
+                style={getStylesError(errors.price, touched.price)}
                 placeholder="Preço"
                 name="price"
-                value={values.price}
+                value={formatPriceField(values.price)}
                 onChange={handleChange}
+                onBlur={handleBlur}
+                required
+                maxLength="12"
               />
-              <span>{errors.price}</span>
+              {touched.price && errors.price && <Error>{errors.price}</Error>}
+
               <RadioButtonGroup>
                 <Field type="radio" name="type" id="income" value="income" />
                 <label htmlFor="income">
@@ -94,15 +127,20 @@ const Register: React.FC = () => {
                   <span>Outcome</span>
                 </label>
               </RadioButtonGroup>
-              <span>{errors.type}</span>
+              {touched.type && errors.type && <Error>{errors.type}</Error>}
 
               <Field
+                style={getStylesError(errors.category, touched.category)}
                 placeholder="Categoria"
                 name="category"
-                value={values.category}
+                value={formatText(values.category)}
                 onChange={handleChange}
+                required
+                maxLength="35"
               />
-              <span>{errors.category}</span>
+              {touched.category && errors.category && (
+                <Error>{errors.category}</Error>
+              )}
 
               <button type="submit" disabled={isSubmitting}>
                 Enviar

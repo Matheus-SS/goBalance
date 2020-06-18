@@ -19,7 +19,7 @@ export const Form = styled.form`
   flex-direction: column;
 
   input {
-    margin: 10px 0;
+    margin-top: 10px;
     border: 0;
     border-radius: 4px;
     padding: 10px;
@@ -31,6 +31,7 @@ export const Form = styled.form`
     padding: 10px;
     border-radius: 4px;
     color: #fff;
+    margin-top: 10px;
   }
 `;
 
@@ -64,4 +65,9 @@ export const RadioButtonGroup = styled.div`
       margin-right: 10px;
     }
   }
+`;
+
+export const Error = styled.span`
+  color: #dc2b33;
+  font-weight: bold;
 `;
