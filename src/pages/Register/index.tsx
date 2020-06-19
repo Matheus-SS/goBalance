@@ -1,12 +1,10 @@
 import React from 'react';
 import { Formik, Field, FormikHelpers } from 'formik';
 import * as Yup from 'yup';
+import { toast } from 'react-toastify';
+import api from '../../services/api';
 
-import {
-  formatValue,
-  formatText,
-  formatPriceField,
-} from '../../utils/formatValue';
+import { formatText, formatPriceField } from '../../utils/formatValue';
 
 import income from '../../assets/income.svg';
 import outcome from '../../assets/outcome.svg';
@@ -48,6 +46,7 @@ const registerTransactionSchema = Yup.object().shape({
 });
 
 const Register: React.FC = () => {
+  // Style the input when gets a error
   function getStylesError(
     errors: string | undefined,
     isTouched: boolean | undefined,
@@ -60,15 +59,32 @@ const Register: React.FC = () => {
     return undefined;
   }
 
+  //  SUBMIT FORM
   const sendForm = (
     values: MyFormValues,
     actions: FormikHelpers<MyFormValues>,
   ): void => {
     actions.setSubmitting(true);
     // make async call
-    console.log(values, formatValue(values.price));
 
-    actions.setSubmitting(false);
+    api
+      .post('/transactions', {
+        title: values.name,
+        value: Number(values.price),
+        type: values.type,
+        category: values.category,
+      })
+      .then(function (response) {
+        toast.success('✔ Salvo');
+
+        actions.setSubmitting(false);
+        actions.resetForm();
+      })
+      .catch(function (error) {
+        const { message } = error.response.data;
+        toast.error(`🔥 ${message}`);
+        actions.setSubmitting(false);
+      });
   };
 
   return (

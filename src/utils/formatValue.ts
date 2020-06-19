@@ -14,7 +14,7 @@ export const formatText = (value: string): string => {
 
 export const formatPriceField = (value: number): string => {
   return value
-    .toString()
+    .toString() // covert to String to use replace and trim to format the field
     .replace(/\s{1,}/g, '')
     .trim();
 };
