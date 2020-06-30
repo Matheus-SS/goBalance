@@ -17,5 +17,3 @@ export const formatPriceField = (value: number): string => {
     .replace(/\s{1,}/g, '')
     .trim();
 };
-
-export default formatValue;
