@@ -1,10 +1,9 @@
-export const formatValue = (value: number): string => {
-  return new Intl.NumberFormat('pt-BR', {
+export const formatValue = (value: number): string =>
+  Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
   }).format(value);
-};
-// TODO
+
 export const formatText = (value: string): string => {
   return value
     .replace(/\s{2,}/g, ' ')
@@ -18,3 +17,5 @@ export const formatPriceField = (value: number): string => {
     .replace(/\s{1,}/g, '')
     .trim();
 };
+
+export default formatValue;
