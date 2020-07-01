@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import pt from 'date-fns/locale/pt/index.js';
 
+import { IoMdTrash } from 'react-icons/io';
+
 import income from '../../assets/income.svg';
 import outcome from '../../assets/outcome.svg';
 import total from '../../assets/total.svg';
@@ -9,6 +11,7 @@ import total from '../../assets/total.svg';
 import api from '../../services/api';
 
 import Header from '../../components/Header';
+import MobileNavBar from '../../components/MobileNavBar';
 
 import { formatValue } from '../../utils/formatValue';
 
@@ -35,6 +38,14 @@ const Dashboard: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [balance, setBalance] = useState<Balance>({} as Balance);
 
+  async function deleteRow(id: string): Promise<void> {
+    const newTransactions = transactions.filter(
+      transaction => transaction.id !== id,
+    );
+    await api.delete(`transactions/${id}`);
+
+    setTransactions(newTransactions);
+  }
   useEffect(() => {
     async function loadTransactions(): Promise<void> {
       const response = await api.get('/transactions');
@@ -66,6 +77,7 @@ const Dashboard: React.FC = () => {
   return (
     <>
       <Header />
+      <MobileNavBar />
       <Container>
         <CardContainer>
           <Card>
@@ -99,19 +111,30 @@ const Dashboard: React.FC = () => {
                 <th>Preço</th>
                 <th>Categoria</th>
                 <th>Data</th>
+                <th>Ação</th>
               </tr>
             </thead>
 
             <tbody>
               {transactions.map(transaction => (
                 <tr key={transaction.id}>
-                  <td className="title">{transaction.title}</td>
-                  <td className={transaction.type}>
+                  <td className="title" data-label="título">
+                    {transaction.title}
+                  </td>
+                  <td className={transaction.type} data-label="preço">
                     {transaction.type === 'outcome' && ' - '}
                     {transaction.formattedValue}
                   </td>
-                  <td>{transaction.category.title}</td>
-                  <td>{transaction.formattedDate}</td>
+                  <td data-label="categoria">{transaction.category.title}</td>
+                  <td data-label="data">{transaction.formattedDate}</td>
+                  <td data-label="ação">
+                    <button
+                      type="button"
+                      onClick={() => deleteRow(transaction.id)}
+                    >
+                      <IoMdTrash size={30} color="#e83f5b" />
+                    </button>
+                  </td>
                 </tr>
               ))}
             </tbody>

@@ -53,4 +53,12 @@ export const Footer = styled.section`
       background: ${shade(0.2, '#ff872c')};
     }
   }
+
+  @media (max-width: 520px) {
+    flex-direction: column;
+
+    p {
+      margin-bottom: 15px;
+    }
+  }
 `;

@@ -2,14 +2,16 @@ import styled from 'styled-components';
 
 interface ContainerProps {
   size?: 'small' | 'large';
+  windowSize?: number;
 }
 
 export const Container = styled.div<ContainerProps>`
   background: #5636d3;
   padding: 30px 0;
+  box-shadow: 1px 2px 5px -2px #000;
 
   header {
-    width: 1120px;
+    max-width: 1120px;
     margin: 0 auto;
     padding: ${({ size }) => (size === 'small' ? '0 20px ' : '0 20px 150px')};
     display: flex;
@@ -33,6 +35,11 @@ export const Container = styled.div<ContainerProps>`
         &:hover {
           opacity: 0.6;
         }
+      }
+
+      /* Resize de window - media queries NAV*/
+      @media (max-width: ${props => props.windowSize}px) {
+        display: none;
       }
     }
   }

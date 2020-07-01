@@ -18,7 +18,7 @@ export const Title = styled.h1`
 
 export const CardContainer = styled.section`
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
   grid-gap: 32px;
   margin-top: -150px;
 `;
@@ -28,6 +28,7 @@ export const Card = styled.div`
   padding: 22px 32px;
   border-radius: 5px;
   color: ${({ total }: CardProps): string => (total ? '#fff' : '#363F5F')};
+  box-shadow: 1px 2px 5px -2px #000;
 
   header {
     display: flex;
@@ -44,15 +45,18 @@ export const Card = styled.div`
     font-size: 36px;
     font-weight: normal;
     line-height: 54px;
+    word-break: break-all;
   }
 `;
 
 export const TableContainer = styled.section`
   margin-top: 64px;
-
+  margin-bottom: 60px;
   table {
     width: 100%;
     border-spacing: 0 8px;
+    border-collapse: separate;
+    table-layout: fixed;
 
     th {
       color: #969cb3;
@@ -63,6 +67,9 @@ export const TableContainer = styled.section`
       line-height: 24px;
     }
 
+    tr {
+      box-shadow: 1px 2px 5px -2px #000;
+    }
     td {
       padding: 20px 32px;
       border: 0;
@@ -82,14 +89,53 @@ export const TableContainer = styled.section`
       &.outcome {
         color: #e83f5b;
       }
-    }
 
-    td:first-child {
-      border-radius: 8px 0 0 8px;
+      button {
+        border: none;
+        background: transparent;
+      }
     }
+  }
 
-    td:last-child {
-      border-radius: 0 8px 8px 0;
+  /* Table responsive */
+  @media screen and (max-width: 630px) {
+    table {
+      border: 0;
+      border-collapse: collapse;
+      thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+      }
+
+      tr {
+        display: block;
+        margin-bottom: 0.625em;
+        box-shadow: 1px 2px 5px -2px #000;
+      }
+
+      td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: 16px;
+        text-align: right;
+
+        &::before {
+          /*
+    * aria-label has no advantage, it won't be read inside a table
+    content: attr(aria-label);
+    */
+          content: attr(data-label);
+          float: left;
+          font-weight: bold;
+          text-transform: uppercase;
+        }
+      }
     }
   }
 `;

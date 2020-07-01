@@ -10,6 +10,7 @@ import income from '../../assets/income.svg';
 import outcome from '../../assets/outcome.svg';
 
 import Header from '../../components/Header';
+import MobileNavBar from '../../components/MobileNavBar';
 
 import { FormContainer, Form, RadioButtonGroup, Error } from './styles';
 
@@ -90,6 +91,8 @@ const Register: React.FC = () => {
   return (
     <>
       <Header />
+      <MobileNavBar />
+
       <FormContainer>
         <Formik
           initialValues={initialValues}

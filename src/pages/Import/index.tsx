@@ -7,6 +7,7 @@ import filesize from 'filesize';
 import Header from '../../components/Header';
 import FileList from '../../components/FileList';
 import Upload from '../../components/Upload';
+import MobileNavBar from '../../components/MobileNavBar';
 
 import { Container, Title, ImportFileContainer, Footer } from './styles';
 
@@ -53,6 +54,8 @@ const Import: React.FC = () => {
   return (
     <>
       <Header size="small" />
+      <MobileNavBar />
+
       <Container>
         <Title>Importar uma transação</Title>
         <ImportFileContainer>
