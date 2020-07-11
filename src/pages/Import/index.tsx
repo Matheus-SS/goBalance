@@ -31,14 +31,16 @@ const Import: React.FC = () => {
 
     data.append('file', uploadedFiles[0].file, uploadedFiles[0].name);
 
-    try {
-      await api.post('/transactions/import', data);
-      toast.success('✔ Arquivo importado com sucesso');
-      history.push('/dashboard');
-    } catch (err) {
-      console.log(err);
-      toast.error(`🔥 Erro ao carregar o arquivo`);
-    }
+    await api
+      .post('/transactions/import', data)
+      .then(function (response) {
+        toast.success('✔ Arquivo importado com sucesso');
+        history.push('/dashboard');
+      })
+      .catch(function (error) {
+        const { message } = error.response.data;
+        toast.error(`🔥 ${message}`);
+      });
   }
 
   function submitFile(files: File[]): void {
